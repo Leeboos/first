@@ -22,3 +22,6 @@ usage:
     });
 
     alert(foo.bar.baz.quux);
+
+homepage:
+    http://github.com/elijahr/when.js
