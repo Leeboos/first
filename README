@@ -1,0 +1,21 @@
+when.js is a a simple javascript namespace requirements handler
+
+usage:
+
+    when('foo', function(){
+        alert('foo is available');
+    });
+
+    when('foo.bar', function(){
+        alert('foo.bar is available');
+    });
+
+    when('foo.bar.baz', function(){
+        alert('foo.bar.baz is available');
+    });
+
+    provide('foo.bar', {
+        baz: 'quux'
+    });
+
+    alert(foo.bar.baz.quux);
