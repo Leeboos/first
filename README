@@ -5,23 +5,29 @@ license:
 
 usage:
 
+    // when window.foo is availabe
     when('foo', function(){
         alert('foo is available');
     });
 
+    // when window.foo.bar is available
     when('foo.bar', function(){
         alert('foo.bar is available');
     });
 
+    // when window.foo.bar.baz is available
     when('foo.bar.baz', function(){
         alert('foo.bar.baz is available');
     });
 
+    // window.foo, window.foo.bar, window.foo.bar.baz all become available,
+    // in that order
     give('foo.bar', {
         baz: 'quux'
     });
 
-    alert(foo.bar.baz.quux);
+    // alert 'quux'
+    alert(foo.bar.baz);
 
 homepage:
     http://github.com/elijahr/when.js
