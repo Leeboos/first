@@ -1,5 +1,8 @@
 when.js is a a simple javascript namespace requirements handler
 
+license:
+    BSD
+
 usage:
 
     when('foo', function(){
