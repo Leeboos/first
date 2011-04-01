@@ -14,7 +14,7 @@ usage:
         alert('foo.bar.baz is available');
     });
 
-    provide('foo.bar', {
+    give('foo.bar', {
         baz: 'quux'
     });
 
