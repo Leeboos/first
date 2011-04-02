@@ -29,56 +29,126 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 (function(){
-    var handlers;
+    var handlers, handled;
 
     handlers = {};
+    handled = {};
+    index = {};
+
+    function cleanNamespace(namespace){
+        // clean out any preceding 'window.' parts of the namespace
+        while (namespace.indexOf('window.') === 0){
+            namespace = namespace.substring(7);
+        }
+        return namespace;
+    }
 
     function when(namespace, callback){
         // bind a callback function to be called when the given namespace is
-        // gived
-        if (handlers[namespace]){
+        // provided with 'give'
+        if (handled.hasOwnProperty(namespace)) {
+            // if this namespace has already been provided, call the callback
+            // immediately
+            callback();
+        } else if (handlers[namespace]){
+            // if this namespace has already been bound to
             handlers[namespace].push(callback);
         } else {
+            // if this namespace has not been bound to yet
             handlers[namespace] = [callback];
+        }
+        // index the namespace for future sub-namespace lookups that match
+        // this namespace
+        createIndex(namespace);
+    }
+
+    function createIndex(namespace){
+        // index the namespace
+        var parts, part, i, len, ind;
+        parts = parse(namespace);
+        len = parts.length;
+        ind = index;
+        for (i=0; i<len; i++){
+            part = parts[i];
+            if (ind.hasOwnProperty(part)){
+                ind = ind[part];
+            } else {
+                ind = ind[part] = {};
+            }
         }
     }
 
-    function _handle(parts, i){
-        // give a list of namespace parts and an index to slice to, handle
-        // the namespace formed by joining the parts
-        var namespace;
-        namespace = parts.slice(0, i).join('.');
-        handle(namespace);
+    function getIndex(namespace){
+        // determine whether the namespace has been indexed,
+        // return the index if yes, null if no
+        namespace = cleanNamespace(namespace);
+        return eval('index.'+namespace) || null;
+    }
+
+    function handleSubNamespaces(namespace, object, ind){
+        // compare the object to the index using the namespace as a baseline
+        var subNamespace;
+        ind = ind !== undefined ? ind : getIndex(namespace);
+        if (ind) {
+            for (propertyName in ind){
+                if (ind.hasOwnProperty(propertyName)){
+                    if (object.hasOwnProperty(propertyName)){
+                        subNamespace = namespace+'.'+propertyName;
+                        handle(subNamespace);
+                        handleSubNamespaces(subNamespace, object[propertyName], ind[propertyName]);
+                    }
+                }
+            }
+        }
     }
 
     function handle(namespace){
         // call all the callback functions attached to a namespace
         var callback, i, len;
+        namespace = cleanNamespace(namespace);
         len = handlers[namespace] ? handlers[namespace].length : 0;
         for (i=0; i<len; i++){
             callback = handlers[namespace][i];
             callback();
         }
+        // keep a reference that this item has already been handled/given
+        handled[namespace] = null;
     }
 
     function give(namespace, object){
         // give namespace as object
-        var parts, part, i, obj, count;
-        parts = parse(namespace);
+        var parts, part, i, obj, count, propertyName, ns, ind;
         obj = window;
-        count = parts.length-1;
-        for (i=0; i<count; i++){
-            part = parts[i];
-            if (obj[part]) {
+        parts = parse(namespace);
+        ns = 'window';
+        while(parts.length-1){
+            part = parts.splice(0,1);
+            if (obj[part]){
                 obj = obj[part];
             } else {
                 obj = obj[part] = {};
-                _handle(parts, i+1);
+                ns += '.'+part;
+                handle(ns);
             }
         }
-        part = parts[i];
-        obj[part] = object;
+        // provide the object at the namespace
+        obj[parts[0]] = object;
+        // call any callbacks bound to this namespace
         handle(namespace);
+        // handle anything provided inside of object
+        handleSubNamespaces(namespace, object);
+    }
+
+    function load(namespace){
+        //
+        if (!when.path) {
+            throw new Error('when.PATH must be set.');
+        }
+//        apply when.m apper
+//        to get the directory structure for the namespaces
+//        then insert a script tag that grabs the remote script
+//        immediately followed by a conditional 'give' that only gives
+//        if is hasnt been given yet so it only gives oncenamespace+'.'+propertyName
     }
 
     function parse(words){
@@ -86,6 +156,8 @@
         return words.split('.');
     }
 
-    window.when = when;
-    window.give = give;
+    // export the when & give functions
+    give('when', when);
+    give('give', give);
+    give('load', load);
 })();

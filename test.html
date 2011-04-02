@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="when.js"></script>
+    <script>
+    // when window.foo is availabe
+    when('foo', function(){
+        alert('foo is available');
+    });
+
+    // when window.foo.bar is available
+    when('foo.bar', function(){
+        alert('foo.bar is available');
+    });
+
+    // when window.foo.bar.baz is available
+    when('foo.bar.baz', function(){
+        alert('foo.bar.baz is available');
+    });
+
+
+    // when window.foo.bar.baz is available
+    when('foo.bar.baz.quux', function(){
+        alert('foo.bar.baz.quux is available');
+    });
+
+    // window.foo, window.foo.bar, window.foo.bar.baz all become available,
+    // in that order
+    give('foo.bar.baz', {
+        quux: true
+    });
+
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
