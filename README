@@ -9,7 +9,7 @@ why:
 
 simple example:
 
-    // when window.foo is availabe
+   // when window.foo is availabe
     when('foo', function(){
         alert('foo is available');
     });
@@ -24,36 +24,21 @@ simple example:
         alert('foo.bar.baz is available');
     });
 
+    // when window.foo.bar.baz is available
+    when('foo.bar.baz.quux', function(){
+        alert('foo.bar.baz.quux is available');
+    });
+
     // window.foo, window.foo.bar, window.foo.bar.baz all become available,
     // in that order
-    give('foo.bar', {
-        baz: 'quux'
+    give('foo.bar.baz', {
+        quux: true
     });
 
-    // alert 'quux'
-    alert(foo.bar.baz);
-
-better example:
-
-    // given this HTML:
-    <html>
-        <head>
-            <script src="my_script.js"></script>
-            <script src="jquery.js"></script>
-        </head>
-        <body>
-        </body>
-    </html>
-
-    // in my_script.js:
-    when('jQuery', function(){
-        $(function(){
-            $('body').text('Hello World!');
-        });
+    // when window.foo.bar.baz.quux is available
+    when('foo.bar.baz.quux', function(){
+        alert('foo.bar.baz.quux is available');
     });
-
-    // at end of jquery.js, put this to provide the namespace:
-    give('jQuery', jQuery);
 
 homepage:
     http://github.com/elijahr/when.js
