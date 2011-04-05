@@ -37,24 +37,21 @@
     function when(namespace, callback){
         // bind a callback function to be called when the given namespace is
         // provided with 'give'
-        var available;
         namespace = cleanNamespace(namespace);
         try {
-            eval('window.'+namespace);
-            available = true;
-        } catch (e) {
-            // not available
-        }
-        if (available) {
             // if this namespace has already been provided, call the callback
             // immediately
+            eval('window.'+namespace);
             callback();
-        } else if (handlers[namespace]){
-            // if this namespace has already been bound to
-            handlers[namespace].push(callback);
-        } else {
-            // if this namespace has not been bound to yet
-            handlers[namespace] = [callback];
+        } catch (e) {
+            // not available
+            if (handlers[namespace]){
+                // if this namespace has already been bound to
+                handlers[namespace].push(callback);
+            } else {
+                // if this namespace has not been bound to yet
+                handlers[namespace] = [callback];
+            }
         }
     }
 
