@@ -103,10 +103,6 @@
         handled[namespace] = null;
     }
 
-    function getSuperNamespaces(namespace){
-
-    }
-
     function getSubNamespaces(namespace){
         // get the sub-namespaces associated  with the namespace
         var subNamespaces, ns;
