@@ -19,7 +19,7 @@
         alert('foo.bar.baz is available');
     });
 
-    // when window.foo.bar.baz is available
+    // when window.foo.bar.baz.quux is available
     when('foo.bar.baz.quux', function(){
         alert('foo.bar.baz.quux is available');
     });
@@ -29,13 +29,12 @@
     give('foo.bar.baz', {
         quux: true
     });
-
+/*
     // when window.foo.bar.baz.quux is available
     when('foo.bar.baz.quux', function(){
         alert('foo.bar.baz.quux is available');
     });
-
-
+*/
     </script>
   </head>
   <body>

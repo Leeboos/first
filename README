@@ -24,11 +24,6 @@ simple example:
         alert('foo.bar.baz is available');
     });
 
-    // when window.foo.bar.baz is available
-    when('foo.bar.baz.quux', function(){
-        alert('foo.bar.baz.quux is available');
-    });
-
     // window.foo, window.foo.bar, window.foo.bar.baz all become available,
     // in that order
     give('foo.bar.baz', {
