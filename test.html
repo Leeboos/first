@@ -26,15 +26,16 @@
 
     // window.foo, window.foo.bar, window.foo.bar.baz all become available,
     // in that order
-    give('foo.bar.baz', {
-        quux: true
+    give('foo', {
+        bar: {
+            baz: {
+                quux: true
+            }
+        }
     });
-/*
-    // when window.foo.bar.baz.quux is available
-    when('foo.bar.baz.quux', function(){
-        alert('foo.bar.baz.quux is available');
-    });
-*/
+
+
+
     </script>
   </head>
   <body>

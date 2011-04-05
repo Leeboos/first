@@ -59,8 +59,7 @@
     function give(namespace, object){
         // give namespace as object
         var parts, part, i, obj, count, propertyName, ns, ind, len,
-            subNamespaces, subNamespace, toHandle;
-        toHandle = [];
+            subNamespaces, subNamespace;
         namespace = cleanNamespace(namespace);
         obj = window;
         parts = parseNamespace(namespace);
@@ -72,22 +71,21 @@
             } else {
                 obj = obj[part] = {};
                 ns += '.'+part;
-                toHandle.push(ns);
+                // handle anything outside the object
+                handle(ns);
             }
         }
 
         // provide the object at the namespace
         obj[parts[0]] = object;
-
         // call any callbacks bound to this namespace
-        toHandle.push(namespace);
+        handle(namespace);
 
         // handle anything provided inside of object
         subNamespaces = getSubNamespaces(namespace);
-        toHandle = toHandle.concat(subNamespaces)
-        len = toHandle.length;
-        while (toHandle.length){
-            ns = toHandle.shift();
+        len = subNamespaces.length;
+        while (subNamespaces.length){
+            ns = subNamespaces.shift();
             handle(ns);
         }
     }
