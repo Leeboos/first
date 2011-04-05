@@ -38,6 +38,7 @@
         // bind a callback function to be called when the given namespace is
         // provided with 'give'
         namespace = cleanNamespace(namespace);
+
         try {
             // if this namespace has already been provided, call the callback
             // immediately
@@ -55,20 +56,40 @@
         }
     }
 
-    function getSubNamespaces(namespace){
-        // get the sub-namespaces associated  with the namespace
-        var subNamespaces, ns;
+    function give(namespace, object){
+        // give namespace as object
+        var parts, part, i, obj, count, propertyName, ns, ind, len,
+            subNamespaces, subNamespace, toHandle;
+        toHandle = [];
         namespace = cleanNamespace(namespace);
-        subNamespaces = [];
-        for (ns in handlers){
-            if (handlers.hasOwnProperty(ns)) {
-                // if this is a sub-namespace
-                if (ns.indexOf(namespace+'.') === 0){
-                    subNamespaces.push(ns);
-                }
+        obj = window;
+        parts = parseNamespace(namespace);
+        ns = 'window';
+        while(parts.length-1){
+            part = parts.splice(0,1);
+            if (obj[part]){
+                obj = obj[part];
+            } else {
+                obj = obj[part] = {};
+                ns += '.'+part;
+                toHandle.push(ns);
             }
         }
-        return subNamespaces;
+
+        // provide the object at the namespace
+        obj[parts[0]] = object;
+
+        // call any callbacks bound to this namespace
+        toHandle.push(namespace);
+
+        // handle anything provided inside of object
+        subNamespaces = getSubNamespaces(namespace);
+        toHandle = toHandle.concat(subNamespaces)
+        len = toHandle.length;
+        while (toHandle.length){
+            ns = toHandle.shift();
+            handle(ns);
+        }
     }
 
     function handle(namespace){
@@ -84,39 +105,23 @@
         handled[namespace] = null;
     }
 
-    function give(namespace, object){
-        // give namespace as object
-        var parts, part, i, obj, count, propertyName, ns, ind, len,
-            subNamespaces, subNamespace;
+    function getSuperNamespaces(namespace){
 
-        namespace = cleanNamespace(namespace);
-        obj = window;
-        parts = parseNamespace(namespace);
-        ns = 'window';
-        while(parts.length-1){
-            part = parts.splice(0,1);
-            if (obj[part]){
-                obj = obj[part];
-            } else {
-                obj = obj[part] = {};
-                ns += '.'+part;
-                handle(ns);
+    }
+
+    function getSubNamespaces(namespace){
+        // get the sub-namespaces associated  with the namespace
+        var subNamespaces, ns;
+        subNamespaces = [];
+        for (ns in handlers){
+            if (handlers.hasOwnProperty(ns)) {
+                // if this is a sub-namespace
+                if (ns.indexOf(namespace+'.') === 0){
+                    subNamespaces.push(ns);
+                }
             }
         }
-
-        // provide the object at the namespace
-        obj[parts[0]] = object;
-
-        // call any callbacks bound to this namespace
-        handle(namespace);
-
-        // handle anything provided inside of object
-        subNamespaces = getSubNamespaces(namespace);
-        len = subNamespaces.length;
-        for (i=0; i<len; i++){
-            subNamespace = subNamespaces[i];
-            handle(subNamespace);
-        }
+        return subNamespaces;
     }
 
     function parseNamespace(words){
@@ -125,6 +130,7 @@
     }
 
     function cleanNamespace(namespace){
+        // turn 'window.foo' into 'foo'
         return namespace.replace(/^(window.)*/g, '');
     }
 
