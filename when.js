@@ -92,6 +92,8 @@
     }
 
     function load(namespace, url, callback){
+        // load and evaluate a script at 'url', then give 'namespace',
+        // and if provided, call 'callback'
         var xhr;
         xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function(){
