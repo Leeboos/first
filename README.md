@@ -2,8 +2,8 @@ when.js is a a simple javascript namespace loader and requirements handler
 
 Why
 ===
-    when.js removes the need to require JavaScripts in order.  It allows you to write more modular code and write
-    with graceful degradation in mind.
+when.js removes the need to require JavaScripts in order.  It allows you to
+write more modular code and write with graceful degradation in mind.
 
 
 A simple example
