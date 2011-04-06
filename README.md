@@ -2,9 +2,9 @@ when.js is a a simple javascript namespace loader and requirements handler
 
 Why
 ===
-when.js removes the need to require JavaScripts in order.  It allows you to
-write more modular code and write with graceful degradation in mind.
-
+when.js makes it so that you don't have to worry about including you JavaScript
+scripts in order.  It allows you to write more modular code and write with
+graceful degradation in mind.
 
 A simple example
 ----------------
@@ -23,8 +23,14 @@ A simple example
         alert('foo.bar.baz is available');
     });
 
-    // window.foo, window.foo.bar, window.foo.bar.baz all become available,
-    // in that order
+    // this is the same as
+    // window.foo = {
+    //    bar: {
+    //        baz: true
+    //    }
+    // }
+    // but will also call the callbacks we set with the when function: 'foo',
+    // 'foo.bar', and 'foo.bar.baz'
     give('foo.bar', {
         baz: true
     });
