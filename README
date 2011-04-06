@@ -35,5 +35,19 @@ simple example:
         alert('foo.bar.baz.quux is available');
     });
 
+asynchronous loading example:
+
+    // load jQuery and notify any handlers that the 'jQuery' namespace
+    // is available when the script has been evaluated
+    load('jQuery', '/static/js/jquery.js');
+
+    // when the jQuery namespace is available, attach an event handler to the
+    // DOM ready event that alerts "DOM is ready"
+    when('jQuery', function(){
+        $(function(){
+            alert('DOM is ready');
+        });
+    })
+
 homepage:
     http://github.com/elijahr/when.js
