@@ -1,5 +1,6 @@
 /*
  * when.js
+ * a simple javascript namespace loader and requirements handler
  * http://github.com/elijahr/when.js
  *
  * Copyright 2011, Elijah Rutschman
