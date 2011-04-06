@@ -52,7 +52,7 @@ Loading JavaScript libraries
 
 Loading models, and graceful degradation
 ----------------------------------------
-    // make a call to your RESTful api to get some user info
+    // make a call to your RESTful API to get some user info
     load('myapp.current_user', '/users/11');
 
     when('myapp.current_user.is_admin', function(){
