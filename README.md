@@ -1,4 +1,4 @@
-when.js is a a simple javascript namespace loader and requirements handler
+when.js is a simple javascript namespace loader and requirements handler
 
 Why
 ===
