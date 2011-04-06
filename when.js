@@ -16,18 +16,21 @@
     handled = {};
     COMPLETE = 4;
 
-    function when(namespace, valueOrCallback, callbackOrUndefined){
+    function when(/* namespace, [value], callback */){
         // bind a callback function to be called when the given namespace is
         // provided with 'give'
-        var handler, value, callback;
-        namespace = cleanNamespace(namespace);
+        var args, namespace, value, callback, handler;
         handler = {};
-        if(arguments.length === 3){
-            handler.value = valueOrCallback;
-            handler.callback = callbackOrUndefined;
-        } else {
-            handler.callback = valueOrCallback;
+        args = Array.prototype.slice.call(arguments);
+        namespace = args.shift();
+        namespace = cleanNamespace(namespace);
+
+        handler.callback = args.pop();
+        if (args.length){
+            handler.value = args.pop();
+            handler.checkValue = true;
         }
+
         try {
             // if this namespace has already been provided, call the callback
             // immediately
@@ -122,7 +125,7 @@
     function _handle(namespace, handler){
         // given a namespace and handler object call the callback of the
         // handler object
-        if (handler.hasOwnProperty('value')){
+        if (handler.checkValue){
             if (eval('window.'+namespace) === handler.value){
                 handler.callback();
             }
