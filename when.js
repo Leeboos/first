@@ -72,24 +72,32 @@
         }
     }
 
-    function load(namespace, url, callback){
-        // load and evaluate a script at 'url', then give 'namespace',
-        // and if provided, call 'callback'
+    function _load(namespace, url, type){
+        // load and evaluate a script at 'url', then give 'namespace'
         var xhr;
         xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function(){
             var src;
             if (this.readyState === COMPLETE){
                 src = this.responseText;
-                if (callback){
-                    when(namespace, callback);
+                if (type === 'script') {
+                    eval(src);
+                } else if (type === 'json') {
+                    window[namespace] = JSON.parse(src);
                 }
-                eval(src);
                 give(namespace, window[namespace]);
             }
         };
         xhr.open('GET', url);
         xhr.send();
+    }
+
+    function load(namespace, url){
+        _load(namespace, url, 'script');
+    }
+
+    function grab(namespace, url){
+        _load(namespace, url, 'json');
     }
 
     function handle(namespace){
@@ -134,4 +142,5 @@
     give('when', when);
     give('give', give);
     give('load', load);
+    give('grab', grab);
 })();
