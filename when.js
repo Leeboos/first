@@ -130,8 +130,9 @@
                 handler.callback();
             }
         } else {
-            eval('window.'+namespace);
-            handler.callback();
+            if (eval('window.'+namespace)){
+                handler.callback();
+            }
         }
     }
 

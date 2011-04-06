@@ -19,8 +19,8 @@ A simple example
     });
 
     // when window.foo.bar.baz is available
-    when('foo.bar.baz', function(){
-        alert('foo.bar.baz is available');
+    when('foo.bar.baz', true, function(){
+        alert('foo.bar.baz is available and true');
     });
 
     // this is the same as
