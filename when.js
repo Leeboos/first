@@ -16,24 +16,30 @@
     handled = {};
     COMPLETE = 4;
 
-    function when(namespace, callback){
+    function when(namespace, valueOrCallback, callbackOrUndefined){
         // bind a callback function to be called when the given namespace is
         // provided with 'give'
+        var handler, value, callback;
         namespace = cleanNamespace(namespace);
-
+        handler = {};
+        if(arguments.length === 3){
+            handler.value = valueOrCallback;
+            handler.callback = callbackOrUndefined;
+        } else {
+            handler.callback = valueOrCallback;
+        }
         try {
             // if this namespace has already been provided, call the callback
             // immediately
-            eval('window.'+namespace);
-            callback();
+            _handle(namespace, handler);
         } catch (e) {
             // not available
             if (handlers[namespace]){
                 // if this namespace has already been bound to
-                handlers[namespace].push(callback);
+                handlers[namespace].push(handler);
             } else {
                 // if this namespace has not been bound to yet
-                handlers[namespace] = [callback];
+                handlers[namespace] = [handler];
             }
         }
     }
@@ -102,15 +108,28 @@
 
     function handle(namespace){
         // call all the callback functions attached to a namespace
-        var callback, i, len;
+        var callback, value, handler, i, len;
         namespace = cleanNamespace(namespace);
         len = handlers[namespace] ? handlers[namespace].length : 0;
         for (i=0; i<len; i++){
-            callback = handlers[namespace][i];
-            callback();
+            handler = handlers[namespace][i];
+            _handle(namespace, handler);
         }
         // keep a reference that this item has already been handled/given
         handled[namespace] = null;
+    }
+
+    function _handle(namespace, handler){
+        // given a namespace and handler object call the callback of the
+        // handler object
+        if (handler.hasOwnProperty('value')){
+            if (eval('window.'+namespace) === handler.value){
+                handler.callback();
+            }
+        } else {
+            eval('window.'+namespace);
+            handler.callback();
+        }
     }
 
     function getSubNamespaces(namespace){

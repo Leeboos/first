@@ -50,13 +50,17 @@ Loading JavaScript libraries
         });
     })
 
-Loading models, and graceful degradation
-----------------------------------------
+Loading models, graceful degradation, and logic
+-----------------------------------------------
     // make a call to your RESTful API to get some user info
     grab('myapp.current_user', '/users/11');
 
-    when('myapp.current_user.is_admin', function(){
-        // this code only runs if the current user is an admin
+    when('myapp.current_user.is_admin', true, function(){
+        // this code only runs if the current user's is_admin proeprty is true
+    });
+
+    when('myapp.current_user.is_admin', false, function(){
+        // this code only runs if the current user's is_admin proeprty is false
     });
 
 License
