@@ -29,10 +29,11 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 (function(){
-    var handlers, handled;
+    var handlers, handled, COMPLETE;
 
     handlers = {};
     handled = {};
+    COMPLETE = 4;
 
     function when(namespace, callback){
         // bind a callback function to be called when the given namespace is
@@ -58,7 +59,7 @@
 
     function give(namespace, object){
         // give namespace as object
-        var parts, part, i, obj, count, propertyName, ns, ind, len,
+        var parts, part, i, obj, count, propertyName, ns, len,
             subNamespaces, subNamespace;
         namespace = cleanNamespace(namespace);
         obj = window;
@@ -88,6 +89,24 @@
             ns = subNamespaces.shift();
             handle(ns);
         }
+    }
+
+    function load(namespace, url, callback){
+        var xhr;
+        xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            var src;
+            if (this.readyState === COMPLETE){
+                src = this.responseText;
+                if (callback){
+                    when(namespace, callback);
+                }
+                eval(src);
+                give(namespace, window[namespace]);
+            }
+        };
+        xhr.open('GET', url);
+        xhr.send();
     }
 
     function handle(namespace){
@@ -131,4 +150,5 @@
     // export the when & give functions
     give('when', when);
     give('give', give);
+    give('load', load);
 })();
